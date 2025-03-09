@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePDF | PDF Security Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="Toggle theme">
+            <i class="fas fa-sun sun"></i>
+            <i class="fas fa-moon moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>SecurePDF</h1>
+            </div>
+            <p class="subtitle">Advanced PDF Security Solution</p>
+        </header>
+
+        <main class="app-main">
+            <div class="card">
+                <div id="uploadSection" class="section">
+                    <h2 class="section-title">Secure Your PDF Files</h2>
+                    <p class="section-description">Encrypt, decrypt, or recover passwords for your PDF documents with ease.</p>
+                    
+                    <div class="upload-area" id="dropArea">
+                        <input type="file" id="fileInput" accept=".pdf" hidden>
+                        <div class="upload-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="upload-text">
+                            <label for="fileInput" class="upload-btn">Choose PDF File</label>
+                            <p>or drag and drop your file here</p>
+                        </div>
+                    </div>
+                    
+                    <div id="filePreview" class="file-preview" style="display: none;">
+                        <div class="file-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="file-info">
+                            <h3 id="fileName">document.pdf</h3>
+                            <p id="fileSize">0 KB</p>
+                        </div>
+                        <button id="removeFile" class="icon-btn" aria-label="Remove file">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="optionsSection" class="section" style="display: none;">
+                    <h2 class="section-title">PDF Processing Options</h2>
+                    
+                    <div class="tabs">
+                        <button id="encryptTab" class="tab active" data-action="encrypt">
+                            <i class="fas fa-lock"></i> Encrypt
+                        </button>
+                        <button id="decryptTab" class="tab" data-action="decrypt">
+                            <i class="fas fa-unlock"></i> Decrypt
+                        </button>
+                        <button id="crackTab" class="tab" data-action="crack">
+                            <i class="fas fa-key"></i> Crack Password
+                        </button>
+                    </div>
+                    
+                    <div id="passwordSection" class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" placeholder="Enter password">
+                            <button id="togglePassword" class="toggle-btn" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div id="passwordStrength" class="password-strength"></div>
+                    </div>
+                    
+                    <div id="passwordTips" class="tips-box">
+                        <h3>Password Recommendations:</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Use at least 8 characters</li>
+                            <li><i class="fas fa-check-circle"></i> Include uppercase and lowercase letters</li>
+                            <li><i class="fas fa-check-circle"></i> Add numbers and special characters</li>
+                            <li><i class="fas fa-check-circle"></i> Avoid easily guessable patterns</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button id="processBtn" class="action-btn">
+                            <span id="actionText">Encrypt PDF</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button id="backBtn" class="secondary-btn">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                </div>
+
+                <div id="progressSection" class="section" style="display: none;">
+                    <h2 class="section-title" id="progressTitle">Processing...</h2>
+                    <div class="progress-container">
+                        <div id="progressBar" class="progress-bar"></div>
+                    </div>
+                    <p id="progressText" class="progress-text">Please wait while we process your file...</p>
+                </div>
+
+                <div id="resultSection" class="section" style="display: none;">
+                    <div class="result-header">
+                        <i class="fas fa-check-circle success-icon"></i>
+                        <h2 class="section-title">Success!</h2>
+                        <p id="resultMessage" class="result-message"></p>
+                    </div>
+                    
+                    <div id="passwordResult" class="password-result" style="display: none;">
+                        <h3>Password</h3>
+                        <div class="password-display">
+                            <span id="resultPassword"></span>
+                            <button id="copyPassword" class="icon-btn" aria-label="Copy password">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="download-actions">
+                        <a id="downloadPdf" href="#" class="download-btn primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                        <a id="downloadPassword" href="#" class="download-btn secondary" style="display: none;">
+                            <i class="fas fa-file-alt"></i> Download Password Info
+                        </a>
+                    </div>
+                    
+                    <button id="newFileBtn" class="text-btn">
+                        <i class="fas fa-plus"></i> Process Another File
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>© 2025 SecurePDF. All rights reserved.</p>
+            <p class="disclaimer">This tool is for legitimate use only. Do not use for unauthorized access to protected documents.</p>
+        </footer>
+    </div>
+
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-circle"></i> Error</h2>
+                <button id="closeModal" class="close-btn" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">An error occurred.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="errorOkBtn" class="modal-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFile = document.getElementById('removeFile');
+            const tabs = document.querySelectorAll('.tab');
+            const passwordSection = document.getElementById('passwordSection');
+            const passwordTips = document.getElementById('passwordTips');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const processBtn = document.getElementById('processBtn');
+            const backBtn = document.getElementById('backBtn');
+            const actionText = document.getElementById('actionText');
+            
+            // Sections
+            const uploadSection = document.getElementById('uploadSection');
+            const optionsSection = document.getElementById('optionsSection');
+            const progressSection = document.getElementById('progressSection');
+            const resultSection = document.getElementById('resultSection');
+            
+            // Progress elements
+            const progressTitle = document.getElementById('progressTitle');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            // Result elements
+            const resultMessage = document.getElementById('resultMessage');
+            const passwordResult = document.getElementById('passwordResult');
+            const resultPassword = document.getElementById('resultPassword');
+            const copyPassword = document.getElementById('copyPassword');
+            const downloadPdf = document.getElementById('downloadPdf');
+            const downloadPassword = document.getElementById('downloadPassword');
+            const newFileBtn = document.getElementById('newFileBtn');
+            
+            // Error modal
+            const errorModal = document.getElementById('errorModal');
+            const errorMessage = document.getElementById('errorMessage');
+            const closeModal = document.getElementById('closeModal');
+            const errorOkBtn = document.getElementById('errorOkBtn');
+            
+            // Variables
+            let selectedFile = null;
+            let selectedAction = 'encrypt';
+            
+            // Theme toggle
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    body.classList.add('dark-mode');
+                }
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+            });
+            
+            // Initialize theme
+            initTheme();
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('highlight');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('highlight');
+            }
+            
+            dropArea.addEventListener('drop', function(e) {
+                const file = e.dataTransfer.files[0];
+                handleFileSelect(file);
+            });
+            
+            // File input change
+            fileInput.addEventListener('change', function() {
+                handleFileSelect(this.files[0]);
+            });
+            
+            function handleFileSelect(file) {
+                if (!file) return;
+                
+                // Validate file type
+                if (file.type !== 'application/pdf') {
+                    showError('Please select a PDF file.');
+                    return;
+                }
+                
+                // Validate file size (16MB max)
+                if (file.size > 16 * 1024 * 1024) {
+                    showError('File too large. Maximum size is 16MB.');
+                    return;
+                }
+                
+                selectedFile = file;
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                filePreview.style.display = 'flex';
+                uploadSection.classList.add('with-preview');
+                
+                // Show options section
+                uploadSection.style.display = 'none';
+                optionsSection.style.display = 'block';
+                
+                updateActionButton();
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Remove file
+            removeFile.addEventListener('click', function() {
+                selectedFile = null;
+                fileInput.value = '';
+                filePreview.style.display = 'none';
+                uploadSection.classList.remove('with-preview');
+            });
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update selected action
+                    selectedAction = this.getAttribute('data-action');
+                    
+                    // Update UI for the selected action
+                    updateUIForAction(selectedAction);
+                    updateActionButton();
+                });
+            });
+            
+            function updateUIForAction(action) {
+                // Show/hide password section based on action
+                if (action === 'crack') {
+                    passwordSection.style.display = 'none';
+                    passwordTips.style.display = 'none';
+                } else {
+                    passwordSection.style.display = 'block';
+                    passwordTips.style.display = action === 'encrypt' ? 'block' : 'none';
+                }
+                
+                // Update action button text
+                const actionMap = {
+                    'encrypt': 'Encrypt PDF',
+                    'decrypt': 'Decrypt PDF',
+                    'crack': 'Crack Password'
+                };
+                
+                actionText.textContent = actionMap[action] || 'Process PDF';
+            }
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Update icon
+                togglePassword.innerHTML = type === 'password' 
+                    ? '<i class="fas fa-eye"></i>' 
+                    : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Password strength checker
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                
+                if (!password) {
+                    passwordStrength.style.display = 'none';
+                    return;
+                }
+                
+                passwordStrength.style.display = 'block';
+                const strength = checkPasswordStrength(password);
+                
+                passwordStrength.className = 'password-strength';
+                passwordStrength.classList.add(strength);
+                
+                const strengthText = {
+                    'weak': 'Weak',
+                    'medium': 'Medium',
+                    'strong': 'Strong'
+                };
+                
+                passwordStrength.textContent = strengthText[strength] + ' Password';
+                
+                updateActionButton();
+            });
+            
+            function checkPasswordStrength(password) {
+                if (!password) return '';
+                
+                if (password.length < 4) {
+                    return 'weak';
+                } else if (password.length < 8) {
+                    return 'medium';
+                }
+                
+                // Check for complexity
+                const hasLower = /[a-z]/.test(password);
+                const hasUpper = /[A-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecial = /[^A-Za-z0-9]/.test(password);
+                
+                const complexity = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+                
+                if (complexity >= 3) {
+                    return 'strong';
+                } else if (complexity >= 2) {
+                    return 'medium';
+                } else {
+                    return 'weak';
+                }
+            }
+            
+            // Update action button state
+            function updateActionButton() {
+                let disabled = !selectedFile;
+                
+                if (selectedAction !== 'crack') {
+                    disabled = disabled || !passwordInput.value;
+                }
+                
+                processBtn.disabled = disabled;
+            }
+            
+            // Back button
+            backBtn.addEventListener('click', function() {
+                optionsSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+            });
+            
+            // Process button
+            processBtn.addEventListener('click', function() {
+                processFile();
+            });
+            
+            function processFile() {
+                // Show progress section
+                optionsSection.style.display = 'none';
+                progressSection.style.display = 'block';
+                
+                // Update progress title
+                const actionDisplayMap = {
+                    'encrypt': 'Encrypting',
+                    'decrypt': 'Decrypting',
+                    'crack': 'Cracking'
+                };
+                
+                progressTitle.textContent = (actionDisplayMap[selectedAction] || 'Processing') + '...';
+                
+                // Animate progress bar
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    if (progress > 90) {
+                        clearInterval(progressInterval);
+                    }
+                    progressBar.style.width = progress + '%';
+                }, 100);
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('action', selectedAction);
+                
+                if (selectedAction !== 'crack') {
+                    formData.append('password', passwordInput.value);
+                }
+                
+                // Send request
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
+                    
+                    if (data.error) {
+                        showError(data.error);
+                        resetUI();
+                        return;
+                    }
+                    
+                    // Update result section
+                    progressSection.style.display = 'none';
+                    resultSection.style.display = 'block';
+                    
+                    resultMessage.textContent = data.message;
+                    
+                    // Show password if available
+                    if (data.password || data.cracked_password) {
+                        passwordResult.style.display = 'block';
+                        resultPassword.textContent = data.password || data.cracked_password;
+                    } else {
+                        passwordResult.style.display = 'none';
+                    }
+                    
+                    // Set download links
+                    downloadPdf.href = data.pdf_url;
+                    downloadPdf.setAttribute('download', data.pdf_filename);
+                    
+                    if (data.password_url) {
+                        downloadPassword.style.display = 'inline-flex';
+                        downloadPassword.href = data.password_url;
+                        downloadPassword.setAttribute('download', data.password_filename);
+                    } else {
+                        downloadPassword.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    clearInterval(progressInterval);
+                    showError('An unexpected error occurred. Please try again.');
+                    console.error(error);
+                    resetUI();
+                });
+            }
+            
+            // Copy password button
+            copyPassword.addEventListener('click', function() {
+                navigator.clipboard.writeText(resultPassword.textContent)
+                    .then(() => {
+                        // Show copied feedback
+                        const originalIcon = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i>';
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalIcon;
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        showError('Failed to copy password');
+                    });
+            });
+            
+            // New file button
+            newFileBtn.addEventListener('click', function() {
+                resetAll();
+            });
+            
+            // Error modal
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorModal.classList.add('show');
+            }
+            
+            function closeErrorModal() {
+                errorModal.classList.remove('show');
+            }
+            
+            closeModal.addEventListener('click', closeErrorModal);
+            errorOkBtn.addEventListener('click', closeErrorModal);
+            
+            // Reset UI
+            function resetUI() {
+                progressSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+            }
+            
+            function resetAll() {
+                // Reset sections
+                resultSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+                
+                // Reset file selection
+                selectedFile = null;
+                fileInput.value = '';
+                filePreview.style.display = 'none';
+                uploadSection.classList.remove('with-preview');
+                
+                // Reset password input
+                passwordInput.value = '';
+                passwordStrength.style.display = 'none';
+                
+                // Reset to encrypt tab
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.getAttribute('data-action') === 'encrypt') {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                selectedAction = 'encrypt';
+                updateUIForAction('encrypt');
+                updateActionButton();
+            }
+        });
+    </script>
+</body>
+</html>
+
