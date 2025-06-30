@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools Pro - Advanced PDF & Image Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-sphere gradient-sphere-1"></div>
+        <div class="gradient-sphere gradient-sphere-2"></div>
+        <div class="gradient-sphere gradient-sphere-3"></div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="themeToggle" onclick="toggleTheme()" class="glass-btn">
+            <i class="fas fa-sun sun-icon"></i>
+            <i class="fas fa-moon moon-icon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header glass-card">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>PDF Tools Pro</h1>
+                    <span class="version-badge">v3.0</span>
+                </div>
+            </div>
+            <p class="subtitle">Advanced PDF & Image Converter with Modern Glassmorphism Design</p>
+            
+            <!-- Feature Badges -->
+            <div class="feature-badges">
+                <div class="feature-badge glass-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure</span>
+                </div>
+                <div class="feature-badge glass-badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Fast</span>
+                </div>
+                <div class="feature-badge glass-badge">
+                    <i class="fas fa-magic"></i>
+                    <span>Modern</span>
+                </div>
+                <div class="feature-badge glass-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Private</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- PDF Security Tools -->
+            <div class="feature-strip glass-card">
+                <div class="strip-header">
+                    <div class="strip-icon security-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="strip-title">
+                        <h2>PDF Security Tools</h2>
+                        <p>Encrypt, decrypt, or crack password-protected PDF files</p>
+                    </div>
+                </div>
+                
+                <!-- Upload Area for PDF -->
+                <div class="upload-zone" id="pdfUploadZone" onclick="document.getElementById('pdfInput').click()">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Choose PDF File</h3>
+                            <p>or drag and drop your PDF file here</p>
+                            <small>Maximum size: 50MB • Supports: PDF</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="file" id="pdfInput" accept=".pdf" style="display: none;" onchange="handlePdfSelect(event)">
+                
+                <!-- File Preview -->
+                <div id="pdfPreview" class="file-preview glass-preview" style="display: none;">
+                    <div class="preview-content">
+                        <i class="fas fa-file-pdf file-icon"></i>
+                        <div class="file-details">
+                            <h4 id="pdfFileName">No file selected</h4>
+                            <span id="pdfFileSize">0 KB</span>
+                        </div>
+                        <button class="remove-file-btn" onclick="removePdf()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Tabs -->
+                <div class="action-tabs">
+                    <button class="action-tab active" onclick="switchPdfTab('encrypt')">
+                        <i class="fas fa-lock"></i>
+                        <span>Encrypt</span>
+                    </button>
+                    <button class="action-tab" onclick="switchPdfTab('decrypt')">
+                        <i class="fas fa-unlock"></i>
+                        <span>Decrypt</span>
+                    </button>
+                    <button class="action-tab" onclick="switchPdfTab('crack')">
+                        <i class="fas fa-key"></i>
+                        <span>Crack</span>
+                    </button>
+                    <button class="action-tab" onclick="switchPdfTab('pdf_to_images')">
+                        <i class="fas fa-images"></i>
+                        <span>To Images</span>
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-panels">
+                    <!-- Encrypt Panel -->
+                    <div id="encrypt-panel" class="tab-panel active">
+                        <div class="input-group">
+                            <label for="encryptPassword">Enter Password:</label>
+                            <div class="password-field">
+                                <input type="password" id="encryptPassword" placeholder="Enter a strong password">
+                                <button type="button" class="toggle-password" onclick="togglePassword('encryptPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="passwordStrength" class="password-strength" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="info-box glass-info">
+                            <h4><i class="fas fa-lightbulb"></i> Password Security Tips</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Use at least 8 characters</li>
+                                <li><i class="fas fa-check"></i> Include uppercase and lowercase letters</li>
+                                <li><i class="fas fa-check"></i> Add numbers and special characters</li>
+                                <li><i class="fas fa-check"></i> Avoid common words or patterns</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="action-button encrypt-btn" onclick="processFile('encrypt')" disabled id="encryptBtn">
+                            <i class="fas fa-lock"></i>
+                            <span>Encrypt PDF</span>
+                        </button>
+                    </div>
+
+                    <!-- Decrypt Panel -->
+                    <div id="decrypt-panel" class="tab-panel">
+                        <div class="input-group">
+                            <label for="decryptPassword">Enter Password:</label>
+                            <div class="password-field">
+                                <input type="password" id="decryptPassword" placeholder="Enter the PDF password">
+                                <button type="button" class="toggle-password" onclick="togglePassword('decryptPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="action-button decrypt-btn" onclick="processFile('decrypt')" disabled id="decryptBtn">
+                            <i class="fas fa-unlock"></i>
+                            <span>Decrypt PDF</span>
+                        </button>
+                    </div>
+
+                    <!-- Crack Panel -->
+                    <div id="crack-panel" class="tab-panel">
+                        <div class="info-box glass-info">
+                            <h4><i class="fas fa-info-circle"></i> Password Recovery</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Tries common passwords first</li>
+                                <li><i class="fas fa-check"></i> Attempts brute force for simple passwords</li>
+                                <li><i class="fas fa-check"></i> Works best with weak passwords</li>
+                                <li><i class="fas fa-clock"></i> Process may take some time</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="action-button crack-btn" onclick="processFile('crack')" disabled id="crackBtn">
+                            <i class="fas fa-key"></i>
+                            <span>Crack Password</span>
+                        </button>
+                    </div>
+
+                    <!-- PDF to Images Panel -->
+                    <div id="pdf_to_images-panel" class="tab-panel">
+                        <div class="info-box glass-info">
+                            <h4><i class="fas fa-info-circle"></i> PDF to Images Conversion</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Converts each PDF page to JPEG image</li>
+                                <li><i class="fas fa-check"></i> High quality 300 DPI output</li>
+                                <li><i class="fas fa-check"></i> Downloads as ZIP file</li>
+                                <li><i class="fas fa-check"></i> Preserves original dimensions</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="action-button convert-btn" onclick="processFile('pdf_to_images')" disabled id="pdfToImagesBtn">
+                            <i class="fas fa-images"></i>
+                            <span>Convert to Images</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images to PDF Converter -->
+            <div class="feature-strip glass-card">
+                <div class="strip-header">
+                    <div class="strip-icon converter-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="strip-title">
+                        <h2>Images to PDF Converter</h2>
+                        <p>Convert multiple images into a single PDF document</p>
+                    </div>
+                </div>
+                
+                <!-- Upload Area for Images -->
+                <div class="upload-zone" id="imageUploadZone" onclick="document.getElementById('imageInput').click()">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Choose Image Files</h3>
+                            <p>or drag and drop multiple image files here</p>
+                            <small>Supports: JPG, PNG, GIF, BMP, TIFF, WebP • Max: 100MB total</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="file" id="imageInput" accept="image/*" multiple style="display: none;" onchange="handleImageSelect(event)">
+                
+                <!-- Image Preview -->
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <div class="preview-header glass-preview">
+                        <h4>Selected Images (<span id="imageCount">0</span>)</h4>
+                        <button class="clear-all-btn" onclick="clearImages()">
+                            <i class="fas fa-trash"></i>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
+                    
+                    <div id="imageGrid" class="image-grid"></div>
+                    
+                    <button class="action-button create-pdf-btn" onclick="convertImagesToPdf()" disabled id="convertImagesBtn">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Create PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div id="progressSection" class="progress-section glass-card" style="display: none;">
+                <div class="progress-content">
+                    <div class="progress-icon">
+                        <i class="fas fa-cog fa-spin"></i>
+                    </div>
+                    <h3 id="progressTitle">Processing your file...</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <p id="progressText">Please wait while we process your file...</p>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection" class="result-section glass-card" style="display: none;">
+                <div class="result-content">
+                    <div class="result-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 id="resultTitle">Operation Completed Successfully!</h3>
+                    <p id="resultMessage"></p>
+                    
+                    <!-- Password Result -->
+                    <div id="passwordResult" class="password-result glass-preview" style="display: none;">
+                        <h4>Recovered Password:</h4>
+                        <div class="password-display">
+                            <span id="resultPassword"></span>
+                            <button class="copy-password-btn" onclick="copyPassword()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Download Button -->
+                    <div class="download-section">
+                        <a href="#" id="downloadLink" class="download-button" style="display: none;">
+                            <i class="fas fa-download"></i>
+                            <span id="downloadText">Download File</span>
+                        </a>
+                    </div>
+                    
+                    <button class="secondary-button" onclick="resetForm()">
+                        <i class="fas fa-redo"></i>
+                        <span>Process Another File</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer glass-card">
+            <div class="footer-content">
+                <p>&copy; 2024 PDF Tools Pro. All rights reserved.</p>
+                <p class="privacy-text">Files processed securely • Automatic deletion after download • Privacy protected</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Privacy</span>
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+                <button class="close-modal-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">An error occurred.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPdf = null;
+        let selectedImages = [];
+        let currentPdfTab = 'encrypt';
+
+        // Theme Management
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // PDF Tab Management
+        function switchPdfTab(tab) {
+            currentPdfTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.action-tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.action-tab').classList.add('active');
+            
+            // Update tab panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(tab + '-panel').classList.add('active');
+            
+            updateButtonStates();
+        }
+
+        // PDF File Handling
+        function handlePdfSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedPdf = file;
+                displayPdfPreview(file);
+                updateButtonStates();
+            }
+        }
+
+        function displayPdfPreview(file) {
+            document.getElementById('pdfFileName').textContent = file.name;
+            document.getElementById('pdfFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('pdfPreview').style.display = 'block';
+        }
+
+        function removePdf() {
+            selectedPdf = null;
+            document.getElementById('pdfInput').value = '';
+            document.getElementById('pdfPreview').style.display = 'none';
+            updateButtonStates();
+        }
+
+        // Image File Handling
+        function handleImageSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                selectedImages = files;
+                displayImagePreview(files);
+                updateButtonStates();
+            }
+        }
+
+        function displayImagePreview(files) {
+            const imageGrid = document.getElementById('imageGrid');
+            const imageCount = document.getElementById('imageCount');
+            
+            imageGrid.innerHTML = '';
+            imageCount.textContent = files.length;
+            
+            files.forEach((file, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item glass-preview';
+                
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.alt = `Preview ${index + 1}`;
+                img.onload = () => URL.revokeObjectURL(img.src);
+                
+                const imageInfo = document.createElement('div');
+                imageInfo.className = 'image-info';
+                imageInfo.innerHTML = `
+                    <span class="image-name">${file.name}</span>
+                    <span class="image-size">${formatFileSize(file.size)}</span>
+                `;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-image-btn';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.onclick = () => removeImage(index);
+                
+                imageItem.appendChild(img);
+                imageItem.appendChild(imageInfo);
+                imageItem.appendChild(removeBtn);
+                imageGrid.appendChild(imageItem);
+            });
+            
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            if (selectedImages.length > 0) {
+                displayImagePreview(selectedImages);
+            } else {
+                clearImages();
+            }
+            updateButtonStates();
+        }
+
+        function clearImages() {
+            selectedImages = [];
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            updateButtonStates();
+        }
+
+        // Button State Management
+        function updateButtonStates() {
+            const hasPdf = selectedPdf !== null;
+            const hasImages = selectedImages.length > 0;
+            
+            // PDF operation buttons
+            document.getElementById('encryptBtn').disabled = !hasPdf;
+            document.getElementById('decryptBtn').disabled = !hasPdf;
+            document.getElementById('crackBtn').disabled = !hasPdf;
+            document.getElementById('pdfToImagesBtn').disabled = !hasPdf;
+            
+            // Image to PDF button
+            document.getElementById('convertImagesBtn').disabled = !hasImages;
+        }
+
+        // File Processing
+        function processFile(action) {
+            if (!selectedPdf) {
+                showError('Please select a PDF file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', selectedPdf);
+            formData.append('action', action);
+
+            if (action === 'encrypt') {
+                const password = document.getElementById('encryptPassword').value;
+                if (!password) {
+                    showError('Please enter a password for encryption.');
+                    return;
+                }
+                formData.append('password', password);
+            } else if (action === 'decrypt') {
+                const password = document.getElementById('decryptPassword').value;
+                if (!password) {
+                    showError('Please enter the password for decryption.');
+                    return;
+                }
+                formData.append('password', password);
+            }
+
+            showProgress(action);
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideProgress();
+                if (data.status === 'success') {
+                    showResult(data, action);
+                } else {
+                    showError(data.error || 'An error occurred while processing the file.');
+                }
+            })
+            .catch(error => {
+                hideProgress();
+                showError('Network error: ' + error.message);
+            });
+        }
+
+        // Image to PDF Conversion
+        function convertImagesToPdf() {
+            if (selectedImages.length === 0) {
+                showError('Please select at least one image file.');
+                return;
+            }
+
+            const formData = new FormData();
+            selectedImages.forEach(file => {
+                formData.append('files', file);
+            });
+
+            showProgress('images_to_pdf');
+
+            fetch('/upload_images', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideProgress();
+                if (data.status === 'success') {
+                    showResult(data, 'images_to_pdf');
+                } else {
+                    showError(data.error || 'An error occurred while converting images to PDF.');
+                }
+            })
+            .catch(error => {
+                hideProgress();
+                showError('Network error: ' + error.message);
+            });
+        }
+
+        // UI Helper Functions
+        function showProgress(action) {
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            document.querySelector('.app-main').style.opacity = '0.5';
+            
+            const actionMessages = {
+                'encrypt': 'Encrypting your PDF...',
+                'decrypt': 'Decrypting your PDF...',
+                'crack': 'Cracking password...',
+                'pdf_to_images': 'Converting PDF to images...',
+                'images_to_pdf': 'Creating PDF from images...'
+            };
+            
+            document.getElementById('progressTitle').textContent = actionMessages[action] || 'Processing...';
+            
+            // Animate progress bar
+            const progressBar = document.getElementById('progressBar');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+                if (progress >= 90) clearInterval(interval);
+            }, 200);
+        }
+
+        function hideProgress() {
+            document.getElementById('progressSection').style.display = 'none';
+            document.querySelector('.app-main').style.opacity = '1';
+        }
+
+        function showResult(data, action) {
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultMessage').textContent = data.message;
+            
+            // Show password result for crack operation
+            if (data.cracked_password) {
+                document.getElementById('passwordResult').style.display = 'block';
+                document.getElementById('resultPassword').textContent = data.cracked_password;
+            } else {
+                document.getElementById('passwordResult').style.display = 'none';
+            }
+            
+            // Setup download link
+            if (data.pdf_url || data.download_url) {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = data.pdf_url || data.download_url;
+                downloadLink.style.display = 'flex';
+                
+                if (data.pdf_filename) {
+                    document.getElementById('downloadText').textContent = `Download ${data.pdf_filename}`;
+                } else if (data.filename) {
+                    document.getElementById('downloadText').textContent = `Download ${data.filename}`;
+                }
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('errorModal').classList.remove('show');
+        }
+
+        function resetForm() {
+            selectedPdf = null;
+            selectedImages = [];
+            document.getElementById('pdfInput').value = '';
+            document.getElementById('imageInput').value = '';
+            document.getElementById('pdfPreview').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'none';
+            
+            // Clear password fields
+            document.getElementById('encryptPassword').value = '';
+            document.getElementById('decryptPassword').value = '';
+            
+            updateButtonStates();
+        }
+
+        // Utility Functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function copyPassword() {
+            const password = document.getElementById('resultPassword').textContent;
+            navigator.clipboard.writeText(password).then(() => {
+                const button = event.target.closest('.copy-password-btn');
+                const icon = button.querySelector('i');
+                icon.classList.remove('fa-copy');
+                icon.classList.add('fa-check');
+                setTimeout(() => {
+                    icon.classList.remove('fa-check');
+                    icon.classList.add('fa-copy');
+                }, 2000);
+            });
+        }
+
+        // Drag and Drop Support
+        ['pdfUploadZone', 'imageUploadZone'].forEach(zoneId => {
+            const zone = document.getElementById(zoneId);
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                zone.addEventListener(eventName, () => zone.classList.add('drag-over'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, () => zone.classList.remove('drag-over'), false);
+            });
+
+            zone.addEventListener('drop', handleDrop, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (e.target.closest('#pdfUploadZone')) {
+                if (files[0] && files[0].type === 'application/pdf') {
+                    selectedPdf = files[0];
+                    displayPdfPreview(files[0]);
+                    updateButtonStates();
+                }
+            } else if (e.target.closest('#imageUploadZone')) {
+                const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+                if (imageFiles.length > 0) {
+                    selectedImages = imageFiles;
+                    displayImagePreview(imageFiles);
+                    updateButtonStates();
+                }
+            }
+        }
+
+        // Password strength checker
+        document.getElementById('encryptPassword').addEventListener('input', checkPasswordStrength);
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('encryptPassword').value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            let strength = 0;
+            let text = '';
+            
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength < 3) {
+                text = 'Weak';
+                strengthDiv.className = 'password-strength weak';
+            } else if (strength < 5) {
+                text = 'Medium';
+                strengthDiv.className = 'password-strength medium';
+            } else {
+                text = 'Strong';
+                strengthDiv.className = 'password-strength strong';
+            }
+            
+            strengthDiv.textContent = text;
+            strengthDiv.style.display = 'block';
+        }
+
+        // Initialize
+        updateButtonStates();
+    </script>
+</body>
+</html>
